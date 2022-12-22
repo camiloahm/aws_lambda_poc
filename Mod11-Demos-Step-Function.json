@@ -1,0 +1,30 @@
+{
+  "Comment": "An example of the Amazon States Language using wait states",
+  "StartAt": "Send Message",
+  "States": {
+    "Send Message": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:612526645826:DemoTopic",
+        "Message": {
+          "body": "About to stop Demo EC2 instances"
+        }
+      },
+      "Next": "Wait20"
+    },
+    "Wait20": {
+      "Type": "Wait",
+      "Seconds": 20,
+      "Next": "StopEC2"
+    },
+    "StopEC2": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:612526645826:function:StopEC2",
+      "Parameters": {
+        "InstanceName": "Demo Server 2019"
+      },
+      "End": true
+    }
+  }
+}
